@@ -1,0 +1,50 @@
+{
+  "name": "@merco/sdk",
+  "version": "0.1.0",
+  "description": "Official Merco Auth Service SDK for JavaScript and TypeScript — /services/auth/*",
+  "author": "Merco",
+  "license": "MIT",
+  "keywords": [
+    "merco",
+    "auth",
+    "sdk",
+    "api",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/merco/merco-sdk-js"
+  },
+  "homepage": "https://merco.app",
+  "bugs": {
+    "url": "https://github.com/merco/merco-sdk-js/issues"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types && node scripts/postbuild.mjs",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
