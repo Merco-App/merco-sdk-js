@@ -7,9 +7,18 @@
 
 import { DEFAULT_BASE_URL } from "./config"
 import type { MercoConfig, RequestAuth } from "./config"
-import type { RegisterParams, LoginParams, RefreshParams, UserData } from "./types"
+import type {
+  RegisterParams,
+  LoginParams,
+  RefreshParams,
+  UserData,
+  CheckoutSessionParams,
+  AgentBudget,
+  WalletMoveParams,
+} from "./types"
 import * as authService from "./services/auth"
 import * as authAdminService from "./services/auth-admin"
+import * as paymentsService from "./services/payments"
 
 // Re-export types
 export * from "./types"
@@ -75,6 +84,30 @@ export class Merco {
       list: () => authAdminService.listRoles(this.baseUrl, this.getAuth()),
       create: (body: { name: string; description?: string; permission_ids?: string[] }) =>
         authAdminService.createRole(this.baseUrl, this.getAuth(), body),
+    },
+  }
+
+  // --- Payments (project key; admin ops need secret key) ---
+
+  payments = {
+    checkout: {
+      create: (params: CheckoutSessionParams) =>
+        paymentsService.createCheckoutSession(this.baseUrl, this.getAuth(), params),
+    },
+    list: () => paymentsService.listPayments(this.baseUrl, this.getAuth()),
+    refund: (params: { payment_id: string; amount?: number }) =>
+      paymentsService.refundPayment(this.baseUrl, this.getAuth(), params),
+    wallet: {
+      get: () => paymentsService.getWallet(this.baseUrl, this.getAuth()),
+      setBudget: (params: AgentBudget) =>
+        paymentsService.setBudget(this.baseUrl, this.getAuth(), params),
+      pay: (params: WalletMoveParams) =>
+        paymentsService.pay(this.baseUrl, this.getAuth(), params),
+      receive: (params: WalletMoveParams) =>
+        paymentsService.receive(this.baseUrl, this.getAuth(), params),
+      approve: (approvalId: string) =>
+        paymentsService.approvePayment(this.baseUrl, this.getAuth(), approvalId),
+      ledger: () => paymentsService.getLedger(this.baseUrl, this.getAuth()),
     },
   }
 }
